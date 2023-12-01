@@ -1,0 +1,93 @@
+@import url(https://fonts.googleapis.com/earlyaccess/cwtexyen.css);
+@import url(https://fonts.googleapis.com/css?family=Noto+Serif&display=swap);
+@import url(https://fonts.googleapis.com/earlyaccess/cwtexfangsong.css);
+
+body {
+  background-color: #010409;
+  color: #74727a;
+  font-family: "Noto Serif", "cwtexyen", sans-serif;
+  margin: 2em;
+}
+
+h1 {
+  color: #eb921f;
+}
+
+h2 {
+  clear: both;
+}
+
+.input {
+  background-color: #010409;
+  color: #fff;
+  font-size: 14px;
+  font-family: helvetica, arial, sans-serif;
+  padding: 5px;
+  border: 1px solid #30363d;
+  border-radius: 3px;
+  margin: 0.5em 0;
+}
+
+.orange {
+  background-color: #eb921f;
+  color: white;
+}
+/* 以下未看 */
+video {
+  clear: both;
+  display: block;
+  transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
+  -moz-transform: rotateY(180deg);
+}
+
+.videoView,
+.detectOnClick,
+.blend-shapes {
+  position: relative;
+  float: left;
+  width: 48%;
+  margin: 2% 1%;
+  cursor: pointer;
+}
+
+.canvas {
+  z-index: 1;
+  position: absolute;
+  pointer-events: none;
+}
+
+.output_canvas {
+  transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
+  -moz-transform: rotateY(180deg);
+}
+
+.detectOnClick {
+  z-index: 0;
+}
+
+.detectOnClick img {
+  width: 100%;
+}
+
+.blend-shapes-item {
+  display: flex;
+  align-items: center;
+  height: 20px;
+}
+
+.blend-shapes-label {
+  display: flex;
+  width: 120px;
+  justify-content: flex-end;
+  align-items: center;
+  margin-right: 4px;
+}
+
+.blend-shapes-value {
+  display: flex;
+  height: 16px;
+  align-items: center;
+  background-color: #eb921f;
+}
