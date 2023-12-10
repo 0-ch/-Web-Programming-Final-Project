@@ -59,7 +59,7 @@ async function handleClick(event) {
   event.target.parentNode.appendChild(canvas);
   const ctx = canvas.getContext("2d");
   const drawingUtils = new DrawingUtils(ctx);
-  console.log(FaceLandmarker.FACE_LANDMARKS_RIGHT_EYE);
+  // console.log(FaceLandmarker.FACE_LANDMARKS_RIGHT_EYE);
   for (const landmarks of faceLandmarkerResult.faceLandmarks) {
     drawingUtils.drawConnectors(
       landmarks,
@@ -105,46 +105,40 @@ async function handleClick(event) {
       { color: "#30FF30" }
     );
   }
-  //顯示52個臉部不同狀態的分數
+  //畫臉
   drawBlendShapes(imageBlendShapes, faceLandmarkerResult.faceBlendshapes);
 }
-// 以下未看
-/********************************************************************
-// Demo 2: Continuously grab image from webcam stream and detect it.
-********************************************************************/
+// 鏡頭模式
 const video = document.getElementById("webcam");
 const canvasElement = document.getElementById("output_canvas");
 const canvasCtx = canvasElement.getContext("2d");
-// Check if webcam access is supported.
+//確認鏡頭存取權
 function hasGetUserMedia() {
+  console.warn("無法存取鏡頭");
   return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
 }
-// If webcam supported, add event listener to button for when user
-// wants to activate it.
 if (hasGetUserMedia()) {
   enableWebcamButton = document.getElementById("webcamButton");
   enableWebcamButton.addEventListener("click", enableCam);
 } else {
-  console.warn("getUserMedia() is not supported by your browser");
+  console.warn("無法使用鏡頭");
 }
-// Enable the live webcam view and start detection.
+// 開啟鏡頭 確認模型 開始偵測
 function enableCam(event) {
   if (!faceLandmarker) {
-    console.log("Wait! faceLandmarker not loaded yet.");
+    console.log("稍等 模型未載入完成");
     return;
   }
   if (webcamRunning === true) {
     webcamRunning = false;
-    enableWebcamButton.innerText = "ENABLE PREDICTIONS";
+    enableWebcamButton.innerText = "開始偵測";
   } else {
     webcamRunning = true;
-    enableWebcamButton.innerText = "DISABLE PREDICTIONS";
+    enableWebcamButton.innerText = "結束偵測";
   }
-  // getUsermedia parameters.
   const constraints = {
     video: true,
   };
-  // Activate the webcam stream.
   navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
     video.srcObject = stream;
     video.addEventListener("loadeddata", predictWebcam);
@@ -152,6 +146,11 @@ function enableCam(event) {
 }
 let lastVideoTime = -1;
 let results = undefined;
+const detectionInterval = 1000; // 毫秒
+let closeEyesCount = 0;
+const audio = new Audio();
+//提示音路徑
+audio.src = 'moo.mp3';
 const drawingUtils = new DrawingUtils(canvasCtx);
 async function predictWebcam() {
   const radio = video.videoHeight / video.videoWidth;
@@ -161,16 +160,18 @@ async function predictWebcam() {
   canvasElement.style.height = videoWidth * radio + "px";
   canvasElement.width = video.videoWidth;
   canvasElement.height = video.videoHeight;
-  // Now let's start detecting the stream.
+  // 變更為鏡頭模式
   if (runningMode === "IMAGE") {
     runningMode = "VIDEO";
     await faceLandmarker.setOptions({ runningMode: runningMode });
   }
   let startTimeMs = performance.now();
+  //不斷執行
   if (lastVideoTime !== video.currentTime) {
     lastVideoTime = video.currentTime;
     results = faceLandmarker.detectForVideo(video, startTimeMs);
   }
+  //有人臉的話 繪製
   if (results.faceLandmarks) {
     for (const landmarks of results.faceLandmarks) {
       drawingUtils.drawConnectors(
@@ -221,10 +222,11 @@ async function predictWebcam() {
     }
   }
   drawBlendShapes(videoBlendShapes, results.faceBlendshapes);
-
-  // Call this function again to keep predicting when the browser is ready.
   if (webcamRunning === true) {
-    window.requestAnimationFrame(predictWebcam);
+        // 設定每秒執行一次
+        setTimeout(() => {
+          window.requestAnimationFrame(predictWebcam);
+        }, detectionInterval);
   }
 }
 
@@ -234,21 +236,67 @@ function drawBlendShapes(el, blendShapes) {
     el.innerHTML = "";
     return;
   }
-  console.log("偵測到臉");
+  console.log("有偵測到臉");
   console.log(blendShapes[0]);
+  //判定閉眼門檻
+  if (blendShapes[0].categories[9].score  > 0.5 && blendShapes[0].categories[10].score  > 0.5)//門檻可再調
+  {
+    closeEyesCount++;
+  }
+  //不連續則歸零
+  else {
+    closeEyesCount = 0;
+  }
+  //9:{index: 9, score: 0.03884951025247574, categoryName: 'eyeBlinkLeft', displayName: ''}
+  //10:{index: 10, score: 0.023560430854558945, categoryName: 'eyeBlinkRight', displayName: ''}
   let htmlMaker = "";
-  blendShapes[0].categories.map((shape) => {
-    htmlMaker += `
-      <li class="blend-shapes-item">
+  htmlMaker += `
+    <li class="blend-shapes-item">
+         <span class="blend-shapes-label">${
+          blendShapes[0].categories[9].displayName || blendShapes[0].categories[9].categoryName
+         }</span>
+         <span class="blend-shapes-value" style="width: calc(${
+           +blendShapes[0].categories[9].score * 100
+         }% - 120px)">${(+blendShapes[0].categories[9].score).toFixed(4)}</span>
+  </li>
+  `;
+  htmlMaker += `
+    <li class="blend-shapes-item">
         <span class="blend-shapes-label">${
-          shape.displayName || shape.categoryName
+          blendShapes[0].categories[10].displayName || blendShapes[0].categories[10].categoryName
         }</span>
         <span class="blend-shapes-value" style="width: calc(${
-          +shape.score * 100
-        }% - 120px)">${(+shape.score).toFixed(4)}</span>
-      </li>
-    `;
-  });
+          +blendShapes[0].categories[10].score * 100
+        }% - 120px)">${(+blendShapes[0].categories[10].score).toFixed(4)}</span>
+  </li>
+  `;
+  htmlMaker += `<h2>你連續閉眼了${closeEyesCount}次<h2/>`
+
+  //使用者在睡覺 該採取的措施...
+  if (closeEyesCount > 4)
+  { 
+    //!!呼叫API輸入資料庫未做!!
+    audio.addEventListener('ended', () => {
+      //!!可以改的部分!!只能等音效結束才能顯示警告 不然警告會停止網頁 
+      console.log('音频播放结束');
+      window.alert("別睡了")
+    });
+    audio.play();
+  }
+  
+  //顯示52個臉部不同狀態的分數
+  // blendShapes[0].categories.map((shape) => {
+  //   htmlMaker += `
+  //     <li class="blend-shapes-item">
+  //       <span class="blend-shapes-label">${
+  //         shape.displayName || shape.categoryName
+  //       }</span>
+  //       <span class="blend-shapes-value" style="width: calc(${
+  //         +shape.score * 100
+  //       }% - 120px)">${(+shape.score).toFixed(4)}</span>
+  //     </li>
+  //   `;
+  // });
 
   el.innerHTML = htmlMaker;
 }

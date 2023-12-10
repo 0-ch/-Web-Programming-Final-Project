@@ -1,4 +1,5 @@
 <!-- 可以計算耗時 -->
+<!-- 可以做一個navbar 採功能分頁 1. 偵測打瞌睡 2. 老師看資料庫的資料 誰在睡覺等等 3. 使用者使用圖片觀看模型效果 -->
 <html>
   <head>
     <meta charset="utf-8" />
@@ -48,30 +49,32 @@
         title="Click to get detection!"
       />
     </div>
-    <!-- 圖片數據部分 -->
+    <!-- 畫臉 -->
     <div class="blend-shapes">
       <ul class="blend-shapes-list" id="image-blend-shapes"></ul>
     </div>
-    <h2>
-      將你的臉置於鏡頭前，即可獲得即時臉部特徵點偵測。<br />點擊<b>開啟鏡頭</b>並在出現提示時授予其存取權限。
-    </h2>
-    <!-- 以下未做 -->
-    <div id="liveView" class="videoView">
-      <button id="webcamButton" class="orange btn">
-        <span class="mdc-button__ripple"></span>
-        <span class="mdc-button__label">開啟鏡頭</span>
-      </button>
-      <div style="position: relative">
-        <video id="webcam" style="position: abso" autoplay playsinline></video>
-        <canvas
-          class="output_canvas"
-          id="output_canvas"
-          style="position: absolute; left: 0px; top: 0px"
-        ></canvas>
+    <div>
+      <h2>
+        將你的臉置於鏡頭前，進行即時打瞌睡偵測。<br />點擊<b>開啟鏡頭</b>並在出現提示時授予其存取權限。
+      </h2>
+      <div id="liveView" class="videoView">
+        <button id="webcamButton" class="orange btn">
+          <!-- <span class="mdc-button__ripple"></span> -->
+          <span class="mdc-button__label">開啟鏡頭</span>
+        </button>
+        <div style="position: relative">
+          <video id="webcam" autoplay playsinline></video>
+          <canvas
+            class="output_canvas"
+            id="output_canvas"
+            style="position: absolute; left: 0px; top: 0px"
+          ></canvas>
+        </div>
       </div>
-    </div>
-    <div class="blend-shapes">
-      <ul class="blend-shapes-list" id="video-blend-shapes"></ul>
+      <!-- 畫臉 -->
+      <div class="blend-shapes">
+        <ul class="blend-shapes-list" id="video-blend-shapes"></ul>
+      </div>
     </div>
   </body>
 </html>
