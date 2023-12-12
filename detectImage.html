@@ -1,0 +1,48 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>圖片臉部特徵點偵測系統</title>
+    <!-- bootstrap -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" type="text/css" href="main.css" />
+    <script type="module" src="faceDetect.js"></script>
+    <script src="loadImage.js"></script>
+    <script src="sheetdb.js"></script>
+  </head>
+  <body>
+    <h1>使用 MediaPipe FaceLandmarker進行臉部特徵點偵測</h1>
+    <h2>選擇圖片後點擊圖片，查看臉部的特徵點。</h2>
+    <div>
+      <label for="fileInput" class="orange btn">
+        選擇圖片
+        <input
+          type="file"
+          id="fileInput"
+          accept="image/*"
+          style="display: none"
+          onchange="loadImage(event)"
+        />
+      </label>
+    </div>
+    <!-- 偵測圖片部分 -->
+    <div class="detectOnClick">
+      <!-- https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/%E9%AB%98%E9%9B%84%E5%B8%82%E9%95%B7_%E9%9F%93%E5%9C%8B%E7%91%9C.jpg/220px-%E9%AB%98%E9%9B%84%E5%B8%82%E9%95%B7_%E9%9F%93%E5%9C%8B%E7%91%9C.jpg -->
+      <img
+        id="selectedImage"
+        src="https://storage.googleapis.com/mediapipe-assets/portrait.jpg"
+        width="400px"
+        crossorigin="anonymous"
+        title="Click to get detection!"
+      />
+    </div>
+    <!-- 畫臉 -->
+    <div class="blend-shapes">
+      <ul class="blend-shapes-list" id="image-blend-shapes"></ul>
+    </div>
+  </body>
+</html>

@@ -148,9 +148,11 @@ let lastVideoTime = -1;
 let results = undefined;
 const detectionInterval = 1000; // 毫秒
 let closeEyesCount = 0;
+var detectCount = 0;
+var detectTotalTime = 0;
 const audio = new Audio();
 //提示音路徑
-audio.src = 'moo.mp3';
+// audio.src = 'moo.mp3';
 const drawingUtils = new DrawingUtils(canvasCtx);
 async function predictWebcam() {
   const radio = video.videoHeight / video.videoWidth;
@@ -169,7 +171,17 @@ async function predictWebcam() {
   //不斷執行
   if (lastVideoTime !== video.currentTime) {
     lastVideoTime = video.currentTime;
-    results = faceLandmarker.detectForVideo(video, startTimeMs);
+    //先只算10次 怕一直算會有負擔
+    if (detectCount < 10) {
+      var timeDetectStart = performance.now();
+      results = faceLandmarker.detectForVideo(video, startTimeMs);
+      var timeDetectEnd = performance.now();
+      console.log("偵測時間：" + (timeDetectEnd - timeDetectStart) + "ms");
+      detectTotalTime += timeDetectEnd - timeDetectStart;
+      detectCount++;
+    } else {
+      results = faceLandmarker.detectForVideo(video, startTimeMs);
+    }
   }
   //有人臉的話 繪製
   if (results.faceLandmarks) {
@@ -223,10 +235,10 @@ async function predictWebcam() {
   }
   drawBlendShapes(videoBlendShapes, results.faceBlendshapes);
   if (webcamRunning === true) {
-        // 設定每秒執行一次
-        setTimeout(() => {
-          window.requestAnimationFrame(predictWebcam);
-        }, detectionInterval);
+    // 設定每秒執行一次
+    setTimeout(() => {
+      window.requestAnimationFrame(predictWebcam);
+    }, detectionInterval);
   }
 }
 
@@ -238,65 +250,71 @@ function drawBlendShapes(el, blendShapes) {
   }
   console.log("有偵測到臉");
   console.log(blendShapes[0]);
-  //判定閉眼門檻
-  if (blendShapes[0].categories[9].score  > 0.5 && blendShapes[0].categories[10].score  > 0.5)//門檻可再調
-  {
-    closeEyesCount++;
-  }
-  //不連續則歸零
-  else {
-    closeEyesCount = 0;
-  }
-  //9:{index: 9, score: 0.03884951025247574, categoryName: 'eyeBlinkLeft', displayName: ''}
-  //10:{index: 10, score: 0.023560430854558945, categoryName: 'eyeBlinkRight', displayName: ''}
   let htmlMaker = "";
-  htmlMaker += `
+  if (runningMode === "IMAGE") {
+    //顯示52個臉部不同狀態的分數
+    blendShapes[0].categories.map((shape) => {
+      htmlMaker += `
+          <li class="blend-shapes-item">
+            <span class="blend-shapes-label">${
+              shape.displayName || shape.categoryName
+            }</span>
+            <span class="blend-shapes-value" style="width: calc(${
+              +shape.score * 100
+            }% - 120px)">${(+shape.score).toFixed(4)}</span>
+          </li>
+        `;
+    });
+  } else {
+    //判定閉眼門檻
+    if (
+      blendShapes[0].categories[9].score > 0.5 &&
+      blendShapes[0].categories[10].score > 0.5
+    ) {
+      //門檻可再調
+      closeEyesCount++;
+    }
+    //不連續則歸零
+    else {
+      closeEyesCount = 0;
+    }
+    //9:{index: 9, score: 0.03884951025247574, categoryName: 'eyeBlinkLeft', displayName: ''}
+    //10:{index: 10, score: 0.023560430854558945, categoryName: 'eyeBlinkRight', displayName: ''}
+
+    htmlMaker += `
     <li class="blend-shapes-item">
          <span class="blend-shapes-label">${
-          blendShapes[0].categories[9].displayName || blendShapes[0].categories[9].categoryName
+           blendShapes[0].categories[9].displayName ||
+           blendShapes[0].categories[9].categoryName
          }</span>
          <span class="blend-shapes-value" style="width: calc(${
            +blendShapes[0].categories[9].score * 100
          }% - 120px)">${(+blendShapes[0].categories[9].score).toFixed(4)}</span>
   </li>
   `;
-  htmlMaker += `
+    htmlMaker += `
     <li class="blend-shapes-item">
         <span class="blend-shapes-label">${
-          blendShapes[0].categories[10].displayName || blendShapes[0].categories[10].categoryName
+          blendShapes[0].categories[10].displayName ||
+          blendShapes[0].categories[10].categoryName
         }</span>
         <span class="blend-shapes-value" style="width: calc(${
           +blendShapes[0].categories[10].score * 100
         }% - 120px)">${(+blendShapes[0].categories[10].score).toFixed(4)}</span>
   </li>
   `;
-  htmlMaker += `<h2>你連續閉眼了${closeEyesCount}次<h2/>`
+    htmlMaker += `<h2>你連續閉眼了${closeEyesCount}次<h2/>`;
+    htmlMaker += `<h2>前${detectCount}次平均偵測時間：${
+      detectTotalTime / detectCount
+    }ms<h2/>`;
 
-  //使用者在睡覺 該採取的措施...
-  if (closeEyesCount > 4)
-  { 
-    //!!呼叫API輸入資料庫未做!!
-    audio.addEventListener('ended', () => {
-      //!!可以改的部分!!只能等音效結束才能顯示警告 不然警告會停止網頁 
-      console.log('音频播放结束');
-      window.alert("別睡了")
-    });
-    audio.play();
+    //使用者在睡覺 該採取的措施...
+    if (closeEyesCount > 4) {
+      //!!呼叫API輸入資料庫未做!!
+      //大概是if sleepCount == null then sleepCount = 1 else sleepCount++
+
+      openModal();
+    }
   }
-  
-  //顯示52個臉部不同狀態的分數
-  // blendShapes[0].categories.map((shape) => {
-  //   htmlMaker += `
-  //     <li class="blend-shapes-item">
-  //       <span class="blend-shapes-label">${
-  //         shape.displayName || shape.categoryName
-  //       }</span>
-  //       <span class="blend-shapes-value" style="width: calc(${
-  //         +shape.score * 100
-  //       }% - 120px)">${(+shape.score).toFixed(4)}</span>
-  //     </li>
-  //   `;
-  // });
-
   el.innerHTML = htmlMaker;
 }

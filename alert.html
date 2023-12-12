@@ -1,98 +1,120 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Custom Modal with Continuous Sound</title>
     <style>
-        /* 遮罩层样式 */
-        #verb {
-            color: firebrick;
-            font-size: 250%;
-        }
+      /* 遮罩层样式 */
+      #verb {
+        color: firebrick;
+        font-size: 250%;
+      }
+      #normal {
+        color: navy;
+        font-size: 250%;
+      }
+      .overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        justify-content: center;
+        align-items: center;
+      }
 
-        #normal {
-            color: navy;
-            font-size: 250%;
-        }
-
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* 模态框样式 */
-        .modal {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-            text-align: center;
-        }
-        #ig{
-            height: 500px;
-            width: 500px;
-        }
+      /* 模态框样式 */
+      .modal {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        text-align: center;
+      }
+      #ig {
+        height: 500px;
+        width: 500px;
+      }
     </style>
-</head>
+  </head>
 
-<body>
-
+  <body>
     <!-- 触发模态框的按钮 -->
     <button onclick="openModal()">显示图像</button>
 
     <!-- 音效 -->
-    <audio id="sound" src="alarm.mp3" loop></audio>
+    <audio id="sound" src="src/alarm.mp3" loop></audio>
 
     <!-- 遮罩层和模态框 -->
     <div class="overlay" id="overlay">
-        <div class="modal">
-            <img src="Cat.jpg" alt="Image"  id="ig">
-            <p id="text">Your text goes here.</p>
-            <button onclick="closeModal()">關閉</button>
-        </div>
+      <div class="modal">
+        <img src="src/Cat.jpg" alt="Image" id="ig" />
+        <p id="text">Your text goes here.</p>
+        <button onclick="closeModal()">關閉</button>
+      </div>
     </div>
 
     <script>
-        var nouns = new Array("同學", "你", "未來工程師", "老鐵", "老哥", "兄弟", "大哥");
-        var verb = new Array("不要再睡了", "看起來很累", "一定昨晚熬夜", "快被當了", "是不是在想周公", "想不想重修", "需要提神", "一直在狀況外", "還搞不清楚狀況");
-        var img = new Array("Cat.jpg", "jerry.jpg", "bird.jpg", "tom.jpg");
+      var nouns = new Array(
+        "同學",
+        "你",
+        "未來工程師",
+        "老鐵",
+        "老哥",
+        "兄弟",
+        "大哥"
+      );
+      var verb = new Array(
+        "不要再睡了",
+        "看起來很累",
+        "一定昨晚熬夜",
+        "快被當了",
+        "是不是在想周公",
+        "想不想重修",
+        "需要提神",
+        "一直在狀況外",
+        "還搞不清楚狀況"
+      );
+      var img = new Array(
+        "src/Cat.jpg",
+        "src/jerry.jpg",
+        "src/bird.jpg",
+        "src/tom.jpg"
+      );
 
-        function Start() {
-            var name = nouns[Math.floor(Math.random() * nouns.length)];
-            var v = verb[Math.floor(Math.random() * verb.length)];
-            var image=img[Math.floor(Math.random()*img.length)];
-            var ima =document.getElementById("ig");
-            ima.setAttribute("src", image);
-           var output="<span id= \"normal\">"+name+"</span>"+"<span id= \"verb\">"+v+"</span> <br>";
-          
-           document.getElementById("text").innerHTML = output;
-          
-        }
-        function openModal() {
-            document.getElementById('overlay').style.display = 'flex';
-            Start();
-            // 模态框显示时播放音效
-            var sound = document.getElementById('sound');
-            sound.play();
-        }
+      function Start() {
+        var name = nouns[Math.floor(Math.random() * nouns.length)];
+        var v = verb[Math.floor(Math.random() * verb.length)];
+        var image = img[Math.floor(Math.random() * img.length)];
+        var ima = document.getElementById("ig");
+        ima.setAttribute("src", image);
+        var output =
+          '<span id= "normal">' +
+          name +
+          "</span>" +
+          '<span id= "verb">' +
+          v +
+          "</span> <br>";
 
-        function closeModal() {
-            document.getElementById('overlay').style.display = 'none';
-            // 关闭模态框时暂停音效
-            var sound = document.getElementById('sound');
-            sound.pause();
-        }
+        document.getElementById("text").innerHTML = output;
+      }
+      function openModal() {
+        document.getElementById("overlay").style.display = "flex";
+        Start();
+        // 模态框显示时播放音效
+        var sound = document.getElementById("sound");
+        sound.play();
+      }
+
+      function closeModal() {
+        document.getElementById("overlay").style.display = "none";
+        // 关闭模态框时暂停音效
+        var sound = document.getElementById("sound");
+        sound.pause();
+      }
     </script>
-
-</body>
-
+  </body>
 </html>

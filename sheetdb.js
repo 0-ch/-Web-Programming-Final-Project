@@ -1,5 +1,6 @@
 function submit() {
   var studentID = document.getElementById("studentID").value;
+
   var studentName = document.getElementById("studentName").value;
   if (studentID == "" || studentName == "") {
     alert("請輸入資料");
@@ -8,7 +9,7 @@ function submit() {
   var data = {
     data: [
       {
-        studentID: studentID,
+        studentID: "'" + studentID, //防止0被刪除
         studentName: studentName,
       },
     ],
