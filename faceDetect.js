@@ -1,5 +1,6 @@
 import vision from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3";
-import 'exercise10/Web-Programming-Final-Project/sheetdb.js';
+import './sheetdb.js';
+import './modal.js';
 const { FaceLandmarker, FilesetResolver, DrawingUtils } = vision;
 const imageBlendShapes = document.getElementById("image-blend-shapes");
 const videoBlendShapes = document.getElementById("video-blend-shapes");
@@ -28,7 +29,10 @@ async function createFaceLandmarker() {
 createFaceLandmarker();
 const selectedImage = document.getElementById("selectedImage");
 // 設置監聽事件
-selectedImage.addEventListener("click", handleClick);
+if (selectedImage != null)
+{ 
+  selectedImage.addEventListener("click", handleClick);
+  }
 //偵測臉部特徵點
 async function handleClick(event) {
   console.log("開始偵測臉部");
@@ -126,6 +130,15 @@ if (hasGetUserMedia()) {
 }
 // 開啟鏡頭 確認模型 開始偵測
 function enableCam(event) {
+  var studentID = document.getElementById("studentID").value;
+  var studentName = document.getElementById("studentName").value;
+  // console.log(studentID);
+  // console.log(studentName);
+  if (studentID == "" || studentName == "")
+  {
+    window.alert("請先輸入學號和姓名");
+    return;
+    }
   if (!faceLandmarker) {
     console.log("稍等 模型未載入完成");
     return;
@@ -172,8 +185,8 @@ async function predictWebcam() {
   //不斷執行
   if (lastVideoTime !== video.currentTime) {
     lastVideoTime = video.currentTime;
-    //先只算10次 怕一直算會有負擔
-    if (detectCount < 10) {
+    //先只算100次 偵測平均耗時差不多0.3-0.6秒
+    if (detectCount < 100) {
       var timeDetectStart = performance.now();
       results = faceLandmarker.detectForVideo(video, startTimeMs);
       var timeDetectEnd = performance.now();
@@ -246,7 +259,7 @@ async function predictWebcam() {
 function drawBlendShapes(el, blendShapes) {
   if (!blendShapes.length) {
     console.log("沒有偵測到臉");
-    el.innerHTML = "";
+    el.innerHTML = "<h1>沒有偵測到臉</h1>";
     return;
   }
   console.log("有偵測到臉");
@@ -305,18 +318,17 @@ function drawBlendShapes(el, blendShapes) {
   </li>
   `;
     htmlMaker += `<h2>你連續閉眼了${closeEyesCount}次<h2/>`;
-    htmlMaker += `<h2>前${detectCount}次平均偵測時間：${
-      detectTotalTime / detectCount
-    }ms<h2/>`;
-
+    // htmlMaker += `<h2>前${detectCount}次平均偵測時間：${
+    //   detectTotalTime / detectCount/1000
+    // }秒<h2/>`;
+    //偵測耗時差不多0.3-0.6秒
+  
     //使用者在睡覺 該採取的措施...
-    var sleepcount=null;
     if (closeEyesCount > 4) {
       //!!呼叫API輸入資料庫未做!!
       //大概是if sleepCount == null then sleepCount = 1 else sleepCount++
-           if (sleepcount==null) sleepCount = 1;
-           else sleepCount++;
-        Update(sleepCount);
+      // var studentID = document.getElementById("studentID").value;
+      Update();
       openModal();
     }
   }
