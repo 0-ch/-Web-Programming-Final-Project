@@ -1,4 +1,5 @@
 import vision from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3";
+import 'exercise10/Web-Programming-Final-Project/sheetdb.js';
 const { FaceLandmarker, FilesetResolver, DrawingUtils } = vision;
 const imageBlendShapes = document.getElementById("image-blend-shapes");
 const videoBlendShapes = document.getElementById("video-blend-shapes");
@@ -309,10 +310,13 @@ function drawBlendShapes(el, blendShapes) {
     }ms<h2/>`;
 
     //使用者在睡覺 該採取的措施...
+    var sleepcount=null;
     if (closeEyesCount > 4) {
       //!!呼叫API輸入資料庫未做!!
       //大概是if sleepCount == null then sleepCount = 1 else sleepCount++
-
+           if (sleepcount==null) sleepCount = 1;
+           else sleepCount++;
+        Update(sleepCount);
       openModal();
     }
   }

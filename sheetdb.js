@@ -31,3 +31,24 @@ function submit() {
   var result = document.getElementById("result");
   result.innerHTML = "你的學號：" + studentID + " 你的姓名：" + studentName;
 }
+function Update(count) {
+  let studentID = document.getElementById("studentID").value;
+  //let sleepCount = document.getElementById("sleepCount").value;
+  fetch(
+    `https://sheetdb.io/api/v1/x2qj8ckpsv196/studentID/${studentID}`,
+    {
+      method: "PATCH",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        data: {
+          sleepCount: count,
+        },
+      }),
+    }
+  )
+    .then((response) => response.json())
+    .then((data) => console.log(data));
+}

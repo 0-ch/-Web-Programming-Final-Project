@@ -1,0 +1,37 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Patch API</title>
+  </head>
+  <body>
+    學號
+    <input type="text" id="studentID" />
+    睡眠次數
+    <input type="text" id="sleepCount" />
+    <button onclick="patchAPI()">Patch API</button>
+    <script>
+      function patchAPI() {
+        let studentID = document.getElementById("studentID").value;
+        let sleepCount = document.getElementById("sleepCount").value;
+        fetch(
+          `https://sheetdb.io/api/v1/x2qj8ckpsv196/studentID/${studentID}`,
+          {
+            method: "PATCH",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              data: {
+                sleepCount: sleepCount,
+              },
+            }),
+          }
+        )
+          .then((response) => response.json())
+          .then((data) => console.log(data));
+      }
+    </script>
+  </body>
+</html>
