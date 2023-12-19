@@ -54,6 +54,7 @@ function openModal() {
 function closeModal() {
   document.getElementById("overlay").style.display = "none";
   // 关闭模态框时暂停音效
-  var sound = document.getElementById("sound");
+  //var sound = document.getElementById("sound");
+  console.log(sound);
   sound.pause();
 }

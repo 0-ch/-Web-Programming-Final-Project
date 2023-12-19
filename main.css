@@ -11,6 +11,7 @@ body {
 
 h1 {
   color: #eb921f;
+  text-align:left;
 }
 
 h2 {
@@ -115,14 +116,54 @@ video {
 }
 
 /* 模態框樣式 */
-.modal {
-  background-color: #fff;
+ .modal  {
+  background-color:white;
   padding: 20px;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   text-align: center;
+   z-index: 1;
+  position: fixed;
+  display: block;
+  background-image: url("src/back.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
 }
 #ig {
   height: 500px;
   width: 500px;
 }
+nav {
+  background-color: rgba(108, 166, 178, 0.634);
+  padding: 10px 0;
+  text-align: center;
+}
+
+/* 无序列表样式 */
+nav ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* 列表项样式 */
+nav li {
+  display: inline-block;
+  margin-right: 20px;
+}
+
+/* 链接样式 */
+nav a {
+  text-decoration: none;
+  color: #ffcc00;
+  font-weight: bold;
+  font-size: 25px;
+  transition: color 0.3s ease; /* 添加颜色渐变效果 */
+}
+
+/* 链接悬停时的样式 */
+nav a:hover {
+  color: white;
+}
+

@@ -52,6 +52,7 @@ async function handleClick(event) {
     n.parentNode.removeChild(n);
   }
   //繪製canvas
+  var modalFlag = 0;
   const faceLandmarkerResult = faceLandmarker.detect(event.target);
   const canvas = document.createElement("canvas");
   canvas.setAttribute("class", "canvas");
@@ -325,6 +326,7 @@ function drawBlendShapes(el, blendShapes) {
   
     //使用者在睡覺 該採取的措施...
     if (closeEyesCount > 4) {
+      
       //!!呼叫API輸入資料庫未做!!
       //大概是if sleepCount == null then sleepCount = 1 else sleepCount++
       // var studentID = document.getElementById("studentID").value;
