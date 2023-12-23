@@ -15,7 +15,7 @@ function submit() {
     ],
   };
   //呼叫API
-  fetch("https://sheetdb.io/api/v1/x2qj8ckpsv196", {
+  fetch("https://sheetdb.io/api/v1/k5difwj65qtgk", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -36,7 +36,7 @@ function Update() {
   // console.log(studentID);
   var studentID = document.getElementById("studentID").value;
   var sleepCount = 0;//設定為若沒取得資料會發生錯誤的初始值
-  fetch(`https://sheetdb.io/api/v1/x2qj8ckpsv196/search?studentID=${studentID}`)
+  fetch(`https://sheetdb.io/api/v1/k5difwj65qtgk/search?studentID=${studentID}`)
     .then((response) => response.json())
     .then((data) => {
       // console.log('返回的數據：', data[0].sleepCount);
@@ -55,7 +55,7 @@ function Update() {
       }
       // console.log("後來sleepCount=" + sleepCount);
       fetch(
-        `https://sheetdb.io/api/v1/x2qj8ckpsv196/studentID/${studentID}`,
+        `https://sheetdb.io/api/v1/k5difwj65qtgk/studentID/${studentID}`,
         {
           method: "PATCH",
           headers: {

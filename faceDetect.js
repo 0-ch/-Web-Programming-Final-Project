@@ -325,7 +325,7 @@ function drawBlendShapes(el, blendShapes) {
     //偵測耗時差不多0.3-0.6秒
   
     //使用者在睡覺 該採取的措施...
-    if (closeEyesCount > 4) {
+    if (closeEyesCount == 4) {
       
       //!!呼叫API輸入資料庫未做!!
       //大概是if sleepCount == null then sleepCount = 1 else sleepCount++

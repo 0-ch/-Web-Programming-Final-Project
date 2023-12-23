@@ -22,7 +22,9 @@ var img = new Array(
   "src/Cat.jpg",
   "src/jerry.jpg",
   "src/bird.jpg",
-  "src/tom.jpg"
+  "src/tom.jpg",
+  "src/patrick.jpg",
+  "src/tired.jpg"
 );
 const sound = new Audio();
 
