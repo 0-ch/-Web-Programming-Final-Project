@@ -18,16 +18,22 @@
     <script src="sheetdb.js"></script>
   </head>
   <body>
-     <div>
-    <nav> 
-      <ul>
+    <div>
+      <nav>
+        <ul>
           <li><a href="detectCamera.html">開啟攝影機</a></li>
           <li><a href="detectImage.html">偵測圖片</a></li>
           <li><a href="result.html">結果顯示</a></li>
-      </ul>
-  </nav>
-     </div>
-     <br>
+          <li>
+            <a
+              href="https://docs.google.com/presentation/d/1ieIaq8H2-JqoTUREqtRrtw7oqbjEV0l8uX3izq4_oYE/edit#slide=id.g2614b6b99c8_2_5"
+              >說明文件</a
+            >
+          </li>
+        </ul>
+      </nav>
+    </div>
+    <br />
     <h1>打瞌睡偵測系統</h1>
     <h2>輸入學號與姓名</h2>
     學號：<input type="text" id="studentID" class="input" required /><br />
@@ -42,10 +48,10 @@
       <h2>
         將你的臉置於鏡頭前，進行即時打瞌睡偵測。<br />點擊<b>開啟鏡頭</b>並在出現提示時授予其存取權限。
       </h2>
-       <div id="liveView" class="videoView">
+      <div id="liveView" class="videoView">
         <button id="webcamButton" class="orange btn">
           <!-- /////////////<span class="mdc-button__ripple"></span> -->
-      <span class="mdc-button__label">開啟鏡頭</span>
+          <span class="mdc-button__label">開啟鏡頭</span>
         </button>
         <div style="position: relative">
           <video id="webcam" autoplay playsinline></video>
@@ -61,7 +67,7 @@
         <ul class="blend-shapes-list" id="video-blend-shapes"></ul>
       </div>
     </div>
-    <!--<button onclick="openModal()">開啟</button>  -->  
+    <!--<button onclick="openModal()">開啟</button>  -->
     <!-- 彈跳出來的視窗 -->
     <div class="overlay" id="overlay">
       <div class="modal">
